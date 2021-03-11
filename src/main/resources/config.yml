@@ -1,0 +1,11 @@
+token: ""
+database:
+  user: "root"
+  database: "herbot"
+  host: "localhost"
+  port: 3306
+  password: ""
+channels_to_check_for_dupes:
+  - ""
+  - ""
+spam_channel: ""
