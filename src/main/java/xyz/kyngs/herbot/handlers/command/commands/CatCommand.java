@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import xyz.kyngs.herbot.HerBot;
 import xyz.kyngs.herbot.handlers.command.AbstractCommand;
-import xyz.kyngs.herbot.util.AnimalUtil;
 import xyz.kyngs.herbot.util.MessageUtil;
 
 public class CatCommand extends AbstractCommand {
@@ -18,6 +17,6 @@ public class CatCommand extends AbstractCommand {
 
     @Override
     public void onCommand(User author, Guild guild, TextChannel channel, Message message, String[] args, GuildMessageReceivedEvent event) {
-        MessageUtil.replyWhenArrive(AnimalUtil.getCat(), message, "Načítání kočičky <:PauseChamp:811729611079024731>");
+        MessageUtil.replyWhenArrive(herBot.getAnimalUtil().readJsonURL("https://api.thecatapi.com/api/images/get?format=json", "OOF! Nepodařilo se načíst kočičku :("), message, "Načítání kočičky <:PauseChamp:811729611079024731>");
     }
 }

@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import xyz.kyngs.herbot.HerBot;
 import xyz.kyngs.herbot.handlers.command.AbstractCommand;
-import xyz.kyngs.herbot.util.AnimalUtil;
 import xyz.kyngs.herbot.util.MessageUtil;
 
 public class DogCommand extends AbstractCommand {
@@ -17,6 +16,6 @@ public class DogCommand extends AbstractCommand {
 
     @Override
     public void onCommand(User author, Guild guild, TextChannel channel, Message message, String[] args, GuildMessageReceivedEvent event) {
-        MessageUtil.replyWhenArrive(AnimalUtil.getDog(), message, "Načítání pejska <:PauseChamp:811729611079024731>");
+        MessageUtil.replyWhenArrive(herBot.getAnimalUtil().readJsonURL("https://random.dog/woof.json", "OOF! Nepodařilo se načíst pejska :("), message, "Načítání pejska <:PauseChamp:811729611079024731>");
     }
 }

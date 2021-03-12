@@ -22,7 +22,8 @@ public class InfoCommand extends AbstractCommand {
 
         builder.setTitle("Informace");
         builder.addField("Verze:", "1.1", false);
-        builder.addField("Máš nějaký dotaz k botovi, nebo jsi našel chybu? Zkontaktuj mě.", "Discord: kyngs#0666", false);
+        builder.addField("Sestavení:", "3", false);
+        builder.addField("Máš nějaký dotaz k botovi, nebo jsi našel chybu? Zkontaktuj mě.", "Discord: kyngs#0666 Twitch: kyngskyngs", false);
         builder.setColor(Color.GREEN);
 
         message.reply(builder.build()).mentionRepliedUser(false).queue();

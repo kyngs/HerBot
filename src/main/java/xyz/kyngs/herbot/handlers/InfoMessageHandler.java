@@ -9,14 +9,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class InfoMessageHandler {
+public class InfoMessageHandler extends AbstractHandler {
 
-    private final HerBot herBot;
     private final Map<String, String> messages;
     private final Map<String, Set<String>> sentMessages;
 
     public InfoMessageHandler(HerBot herBot) {
-        this.herBot = herBot;
+        super(herBot);
         messages = new HashMap<>();
         sentMessages = new HashMap<>();
 
