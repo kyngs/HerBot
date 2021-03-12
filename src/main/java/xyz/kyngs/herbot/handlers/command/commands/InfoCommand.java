@@ -21,7 +21,7 @@ public class InfoCommand extends AbstractCommand {
         var builder = new EmbedBuilder();
 
         builder.setTitle("Informace");
-        builder.addField("Verze:", "1.0", false);
+        builder.addField("Verze:", "1.1", false);
         builder.addField("Máš nějaký dotaz k botovi, nebo jsi našel chybu? Zkontaktuj mě.", "Discord: kyngs#0666", false);
         builder.setColor(Color.GREEN);
 
