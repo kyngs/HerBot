@@ -31,6 +31,7 @@ public class Bootstrap {
 
         LOGGER.info("Started!");
 
+
     }
 
     private static void validateSchema(Configuration configuration) {

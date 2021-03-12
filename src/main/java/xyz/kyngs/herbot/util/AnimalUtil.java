@@ -1,6 +1,7 @@
 package xyz.kyngs.herbot.util;
 
 import com.google.gson.JsonParser;
+import xyz.kyngs.herbot.HerBot;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,60 +14,10 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class AnimalUtil {
 
-    public static CompletableFuture<String> getCat() {
-        var future = new CompletableFuture<String>();
+    private final HerBot herBot;
 
-        future.completeAsync(() -> {
-            try {
-                var inputStream = new URL("https://api.thecatapi.com/api/images/get?format=xml").openStream();
-                var bufferedReader = new BufferedReader(new InputStreamReader(inputStream, UTF_8));
-
-                var sb = new StringBuilder();
-                int cp;
-                while ((cp = bufferedReader.read()) != -1) {
-                    sb.append((char) cp);
-                }
-                bufferedReader.close();
-                return sb.substring(sb.toString().indexOf("<url>") + "<url>".length(), sb.toString().indexOf("</url>"));
-            } catch (Exception e) {
-                e.printStackTrace();
-                return "OOF! Nepodařilo se načíst kočičku :(";
-            }
-        });
-
-        return future;
-    }
-
-    public static CompletableFuture<String> getDuck() {
-        var future = new CompletableFuture<String>();
-
-        future.completeAsync(() -> {
-            try {
-                var inputStream = new URL("https://random-d.uk/api/v2/random").openStream();
-                return readJsonUrl(inputStream);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return "OOF! Nepodařilo se načíst kachničku :(";
-            }
-        });
-
-        return future;
-    }
-
-    public static CompletableFuture<String> getDog() {
-        var future = new CompletableFuture<String>();
-
-        future.completeAsync(() -> {
-            try {
-                var inputStream = new URL("https://random.dog/woof.json").openStream();
-                return readJsonUrl(inputStream);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return "OOF! Nepodařilo se načíst pejska :(";
-            }
-        });
-
-        return future;
+    public AnimalUtil(HerBot herBot) {
+        this.herBot = herBot;
     }
 
     private static String readJsonUrl(InputStream inputStream) throws IOException {
@@ -77,9 +28,25 @@ public class AnimalUtil {
         while ((cp = bufferedReader.read()) != -1) {
             sb.append((char) cp);
         }
-        var root = JsonParser.parseString(sb.toString()).getAsJsonObject();
+        var root = JsonParser.parseString(sb.toString().replace("[", "").replace("]", "")).getAsJsonObject();
         bufferedReader.close();
         return root.getAsJsonPrimitive("url").getAsString();
+    }
+
+    public CompletableFuture<String> readJsonURL(String url, String errMessage) {
+        var future = new CompletableFuture<String>();
+
+        future.completeAsync(() -> {
+            try {
+                var inputStream = new URL(url).openStream();
+                return readJsonUrl(inputStream);
+            } catch (Exception e) {
+                herBot.getThrowableHandler().reportThrowable(e);
+                return errMessage;
+            }
+        });
+
+        return future;
     }
 
 }

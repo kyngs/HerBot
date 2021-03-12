@@ -10,14 +10,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 
-public class AntiDuplicationHandler {
+public class AntiDuplicationHandler extends AbstractHandler {
 
-    private final HerBot herBot;
     private final List<String> channelsToWatch;
     private final String spamChannel;
 
     public AntiDuplicationHandler(HerBot herBot) {
-        this.herBot = herBot;
+        super(herBot);
         var configuration = herBot.getConfiguration();
         channelsToWatch = configuration.getStringList("channels_to_check_for_dupes");
         spamChannel = configuration.getString("spam_channel");

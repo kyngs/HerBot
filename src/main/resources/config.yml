@@ -9,3 +9,4 @@ channels_to_check_for_dupes:
   - ""
   - ""
 spam_channel: ""
+error_channel: ""

@@ -7,8 +7,10 @@ import org.simpleyaml.configuration.Configuration;
 import xyz.kyngs.herbot.database.DatabaseManager;
 import xyz.kyngs.herbot.handlers.AntiDuplicationHandler;
 import xyz.kyngs.herbot.handlers.InfoMessageHandler;
+import xyz.kyngs.herbot.handlers.ThrowableHandler;
 import xyz.kyngs.herbot.handlers.command.CommandHandler;
 import xyz.kyngs.herbot.handlers.command.commands.*;
+import xyz.kyngs.herbot.util.AnimalUtil;
 import xyz.kyngs.logger.LogBuilder;
 import xyz.kyngs.logger.Logger;
 
@@ -36,6 +38,8 @@ public class HerBot {
     private final InfoMessageHandler infoMessageHandler;
     private final AntiDuplicationHandler antiDuplicationHandler;
     private final CommandHandler commandHandler;
+    private final AnimalUtil animalUtil;
+    private final ThrowableHandler throwableHandler;
 
     public HerBot(Configuration configuration) {
         this.configuration = configuration;
@@ -62,6 +66,8 @@ public class HerBot {
         infoMessageHandler = new InfoMessageHandler(this);
         antiDuplicationHandler = new AntiDuplicationHandler(this);
         commandHandler = new CommandHandler(this);
+        animalUtil = new AnimalUtil(this);
+        throwableHandler = new ThrowableHandler(this);
 
         commandHandler.registerCommand(new CatCommand(this, "Pošle obrázek kočičky"), "cat", "číča", "kočička", "čiči", "kočka");
         commandHandler.registerCommand(new DuckCommand(this, "Pošle obrázek kachinčky"), "duck", "ducc", "kachnička");
@@ -71,11 +77,24 @@ public class HerBot {
 
         jda.addEventListener(new EventListener(this));
 
+        for (Thread thread : Thread.getAllStackTraces().keySet()) {
+            thread.setUncaughtExceptionHandler((t, e) -> throwableHandler.reportThrowable(e));
+        }
+
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown, "Shutdown Handler"));
+
+    }
+
+    public AnimalUtil getAnimalUtil() {
+        return animalUtil;
     }
 
     public CommandHandler getCommandHandler() {
         return commandHandler;
+    }
+
+    public ThrowableHandler getThrowableHandler() {
+        return throwableHandler;
     }
 
     public DatabaseManager getDatabaseManager() {

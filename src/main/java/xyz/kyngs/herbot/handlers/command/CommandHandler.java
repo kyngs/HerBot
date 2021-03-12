@@ -1,23 +1,26 @@
 package xyz.kyngs.herbot.handlers.command;
 
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import xyz.kyngs.herbot.HerBot;
+import xyz.kyngs.herbot.handlers.AbstractHandler;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommandHandler {
+public class CommandHandler extends AbstractHandler {
 
-    private final HerBot herBot;
     private final Map<String, AbstractCommand> commands;
     private final String spamChannel;
 
     public CommandHandler(HerBot herBot) {
-        this.herBot = herBot;
+        super(herBot);
+
         commands = new HashMap<>();
         var configuration = herBot.getConfiguration();
         spamChannel = configuration.getString("spam_channel");
@@ -75,7 +78,17 @@ public class CommandHandler {
             return;
         }
 
-        command.onCommand(event.getAuthor(), event.getGuild(), event.getChannel(), message, Arrays.copyOfRange(args, 1, args.length), event);
+        try {
+            command.onCommand(event.getAuthor(), event.getGuild(), event.getChannel(), message, Arrays.copyOfRange(args, 1, args.length), event);
+        } catch (Exception e) {
+            event.getChannel().sendMessage(new EmbedBuilder()
+                    .setColor(Color.RED)
+                    .setTitle("Chyba!")
+                    .setDescription("Nastala chyba při spouštění tohoto příkazu, chyba byla automaticky ohlášena! Omlouvám se za způsobené potíže.")
+                    .build()
+            ).queue();
+            herBot.getThrowableHandler().reportThrowable(e);
+        }
 
     }
 
