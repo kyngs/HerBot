@@ -79,7 +79,11 @@ public class CommandHandler extends AbstractHandler {
         }
 
         try {
-            command.onCommand(event.getAuthor(), event.getGuild(), event.getChannel(), message, Arrays.copyOfRange(args, 1, args.length), event);
+            var userHandler = herBot.getUserHandler();
+            var userID = event.getAuthor().getId();
+            var profile = userHandler.getUser(userID);
+            command.onCommand(event.getAuthor(), event.getGuild(), event.getChannel(), message, Arrays.copyOfRange(args, 1, args.length), profile, event);
+            userHandler.saveUser(profile, userID);
         } catch (Exception e) {
             event.getChannel().sendMessage(new EmbedBuilder()
                     .setColor(Color.RED)

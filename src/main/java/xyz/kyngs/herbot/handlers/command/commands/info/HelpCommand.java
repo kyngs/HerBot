@@ -1,4 +1,4 @@
-package xyz.kyngs.herbot.handlers.command.commands;
+package xyz.kyngs.herbot.handlers.command.commands.info;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import xyz.kyngs.herbot.HerBot;
 import xyz.kyngs.herbot.handlers.command.AbstractCommand;
+import xyz.kyngs.herbot.handlers.user.UserProfile;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -19,11 +20,11 @@ import java.util.Map;
 public class HelpCommand extends AbstractCommand {
 
     public HelpCommand(HerBot herBot, String description) {
-        super(herBot, description);
+        super(herBot, description, "");
     }
 
     @Override
-    public void onCommand(User author, Guild guild, TextChannel channel, Message message, String[] args, GuildMessageReceivedEvent event) {
+    public void exec(User author, Guild guild, TextChannel channel, Message message, String[] args, UserProfile profile, GuildMessageReceivedEvent event) {
         var commandHandler = herBot.getCommandHandler();
 
         var out = new MessageBuilder();
