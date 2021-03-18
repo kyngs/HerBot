@@ -38,13 +38,20 @@ public abstract class AbstractCommand implements CommandExecutor {
 
     @Override
     public void onCommand(User author, Guild guild, TextChannel channel, Message message, String[] args, UserProfile profile, GuildMessageReceivedEvent event) {
+        if (everythingOK(message, args, profile)) return;
+
+        exec(author, guild, channel, message, args, profile, event);
+
+    }
+
+    private boolean everythingOK(Message message, String[] args, UserProfile profile) {
         if (!profile.hasPermission(permission)) {
             var builder = new EmbedBuilder();
             builder.setColor(Color.RED);
             builder.setTitle("Tuto akci nemůžeš provést");
             builder.setDescription("Na tuto akci nemáš dostatečné oprávnění");
             message.reply(builder.build()).mentionRepliedUser(false).queue();
-            return;
+            return false;
         }
         if (args.length < this.args.size()) {
             var builder = new EmbedBuilder();
@@ -67,7 +74,7 @@ public abstract class AbstractCommand implements CommandExecutor {
                 builder.addField(nameBuilder.toString(), typeName, true);
             });
             message.reply(builder.build()).mentionRepliedUser(false).queue();
-            return;
+            return false;
         }
 
         boolean good = true;
@@ -105,11 +112,9 @@ public abstract class AbstractCommand implements CommandExecutor {
 
         if (!good) {
             message.reply(builder.build()).mentionRepliedUser(false).queue();
-            return;
+            return false;
         }
-
-        exec(author, guild, channel, message, args, profile, event);
-
+        return true;
     }
 
     public abstract void exec(User author, Guild guild, TextChannel channel, Message message, String[] args, UserProfile profile, GuildMessageReceivedEvent event);
