@@ -2,12 +2,12 @@ package xyz.kyngs.herbot.util;
 
 import java.util.Map;
 
-public class EntryImpl<K, V> implements Map.Entry<K, V> {
+public class ImmutableEntry<K, V> implements Map.Entry<K, V> {
 
     private final K key;
     private final V value;
 
-    public EntryImpl(K key, V value) {
+    public ImmutableEntry(K key, V value) {
         this.key = key;
         this.value = value;
     }

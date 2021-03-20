@@ -60,7 +60,7 @@ public class UserProfile {
     }
 
     public void allowPermission(String perm) {
-        perms.add(perm);
+        if (!perms.contains(perm)) perms.add(perm);
     }
 
     public void declinePermission(String perm) {

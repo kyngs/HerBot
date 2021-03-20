@@ -8,6 +8,9 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import xyz.kyngs.herbot.HerBot;
 import xyz.kyngs.herbot.handlers.command.AbstractCommand;
+import xyz.kyngs.herbot.handlers.command.argument.Arguments;
+import xyz.kyngs.herbot.handlers.command.argument.NumberState;
+import xyz.kyngs.herbot.handlers.command.argument.arguments.IntegerArgument;
 import xyz.kyngs.herbot.handlers.user.UserProfile;
 
 import java.awt.*;
@@ -17,22 +20,14 @@ public class GambleCommand extends AbstractCommand {
 
     public GambleCommand(HerBot herBot, String description) {
         super(herBot, description, "");
-        addArg(Integer.class, "sázka");
+        addArg(new IntegerArgument(NumberState.POSITIVE, "sázka"));
     }
 
     @Override
-    public void exec(User author, Guild guild, TextChannel channel, Message message, String[] args, UserProfile profile, GuildMessageReceivedEvent event) {
+    public void exec(User author, Guild guild, TextChannel channel, Message message, Arguments args, UserProfile profile, GuildMessageReceivedEvent event) {
         var random = ThreadLocalRandom.current();
 
-        var amount = Integer.parseInt(args[0]);
-
-        if (amount < 0) {
-            var builder = new EmbedBuilder();
-            builder.setTitle("Sázka nemůže být negativní");
-            builder.setColor(Color.RED);
-            message.reply(builder.build()).mentionRepliedUser(false).queue();
-            return;
-        }
+        int amount = args.getArgument(0);
 
         if (amount > profile.getCoins()) {
             var builder = new EmbedBuilder();

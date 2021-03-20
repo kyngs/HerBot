@@ -10,7 +10,9 @@ import xyz.kyngs.herbot.handlers.AntiDuplicationHandler;
 import xyz.kyngs.herbot.handlers.InfoMessageHandler;
 import xyz.kyngs.herbot.handlers.ThrowableHandler;
 import xyz.kyngs.herbot.handlers.command.CommandHandler;
+import xyz.kyngs.herbot.handlers.command.commands.admin.AllPermissionsCommand;
 import xyz.kyngs.herbot.handlers.command.commands.admin.PermissionCommand;
+import xyz.kyngs.herbot.handlers.command.commands.admin.UserPermissions;
 import xyz.kyngs.herbot.handlers.command.commands.animal.CatCommand;
 import xyz.kyngs.herbot.handlers.command.commands.animal.DogCommand;
 import xyz.kyngs.herbot.handlers.command.commands.animal.DuckCommand;
@@ -20,6 +22,8 @@ import xyz.kyngs.herbot.handlers.command.commands.economy.GambleCommand;
 import xyz.kyngs.herbot.handlers.command.commands.economy.PayCommand;
 import xyz.kyngs.herbot.handlers.command.commands.info.HelpCommand;
 import xyz.kyngs.herbot.handlers.command.commands.info.InfoCommand;
+import xyz.kyngs.herbot.handlers.command.commands.security.MyPermissionsCommand;
+import xyz.kyngs.herbot.handlers.security.SecurityHandler;
 import xyz.kyngs.herbot.handlers.user.UserHandler;
 import xyz.kyngs.herbot.util.AnimalUtil;
 import xyz.kyngs.logger.LogBuilder;
@@ -53,6 +57,7 @@ public class HerBot {
     private final AnimalUtil animalUtil;
     private final ThrowableHandler throwableHandler;
     private final UserHandler userHandler;
+    private final SecurityHandler securityHandler;
 
     public HerBot(Configuration configuration) {
         this.configuration = configuration;
@@ -82,6 +87,7 @@ public class HerBot {
         animalUtil = new AnimalUtil(this);
         throwableHandler = new ThrowableHandler(this);
         userHandler = new UserHandler(this);
+        securityHandler = new SecurityHandler(this);
 
         commandHandler.registerCommand(new CatCommand(this, "Pošle obrázek kočičky"), "cat", "číča", "kočička", "čiči", "kočka");
         commandHandler.registerCommand(new DuckCommand(this, "Pošle obrázek kachničky"), "duck", "ducc", "kachnička");
@@ -93,6 +99,9 @@ public class HerBot {
         commandHandler.registerCommand(new BalanceCommand(this, "Zobrazí zůstatek na tvém účtu"), "bal", "balance");
         commandHandler.registerCommand(new PayCommand(this, "Pošle peníze jiným uživatelům"), "pay", "zaplatit");
         commandHandler.registerCommand(new GambleCommand(this, "Pomůže ti získat více peněz"), "gamble", "sazka");
+        commandHandler.registerCommand(new AllPermissionsCommand(this, "Zobrazí všechna oprávnění"), "allperms");
+        commandHandler.registerCommand(new MyPermissionsCommand(this, "Zobrazí tvá oprávnění"), "myperms", "perms");
+        commandHandler.registerCommand(new UserPermissions(this, "Zobrazí oprávnění vybraného uživatele"), "userperms");
 
         jda.addEventListener(new EventListener(this));
 
@@ -161,5 +170,9 @@ public class HerBot {
 
     public UserHandler getUserHandler() {
         return userHandler;
+    }
+
+    public SecurityHandler getSecurityHandler() {
+        return securityHandler;
     }
 }

@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import xyz.kyngs.herbot.HerBot;
 import xyz.kyngs.herbot.handlers.command.AbstractCommand;
+import xyz.kyngs.herbot.handlers.command.argument.Arguments;
 import xyz.kyngs.herbot.handlers.user.UserProfile;
 
 import java.awt.*;
@@ -24,7 +25,7 @@ public class HelpCommand extends AbstractCommand {
     }
 
     @Override
-    public void exec(User author, Guild guild, TextChannel channel, Message message, String[] args, UserProfile profile, GuildMessageReceivedEvent event) {
+    public void exec(User author, Guild guild, TextChannel channel, Message message, Arguments args, UserProfile profile, GuildMessageReceivedEvent event) {
         var commandHandler = herBot.getCommandHandler();
 
         var out = new MessageBuilder();
@@ -40,6 +41,7 @@ public class HelpCommand extends AbstractCommand {
         }
 
         for (Map.Entry<AbstractCommand, List<String>> entry : mergeMap.entrySet()) {
+            if (!profile.hasPermission(entry.getKey().getPermission())) continue;
             var name = new StringBuilder();
             for (var s : entry.getValue()) {
                 name.append(s).append(", ");

@@ -7,22 +7,26 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import xyz.kyngs.herbot.HerBot;
+import xyz.kyngs.herbot.handlers.command.argument.AbstractArgument;
+import xyz.kyngs.herbot.handlers.command.argument.Arguments;
 import xyz.kyngs.herbot.handlers.user.UserProfile;
-import xyz.kyngs.herbot.util.Argument;
-import xyz.kyngs.herbot.util.ClassUtil;
+import xyz.kyngs.herbot.util.ExceptionUtil;
+import xyz.kyngs.herbot.util.ImmutableEntry;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static xyz.kyngs.herbot.util.ExceptionUtil.completedExceptionally;
-
 public abstract class AbstractCommand implements CommandExecutor {
 
     protected final HerBot herBot;
     protected final String description;
-    @SuppressWarnings("rawtypes")
-    private final List<Argument> args;
+    private final List<AbstractArgument> args;
+
+    public String getPermission() {
+        return permission;
+    }
+
     private final String permission;
 
     public AbstractCommand(HerBot herBot, String description, String permission) {
@@ -32,19 +36,25 @@ public abstract class AbstractCommand implements CommandExecutor {
         args = new ArrayList<>();
     }
 
-    public <T> void addArg(Class<T> type, String... names) {
-        args.add(new Argument<T>(type, names));
+    public void addArg(AbstractArgument arg) {
+        args.add(arg);
     }
 
     @Override
     public void onCommand(User author, Guild guild, TextChannel channel, Message message, String[] args, UserProfile profile, GuildMessageReceivedEvent event) {
-        if (everythingOK(message, args, profile)) return;
+        if (!checkPerm(message, profile) || !checkArgSize(message, args) || !checkArgumentType(message, args)) return;
 
-        exec(author, guild, channel, message, args, profile, event);
+        var list = new ArrayList<ImmutableEntry<String, AbstractArgument>>();
+
+        for (int i = 0; i < this.args.size(); i++) {
+            list.add(new ImmutableEntry<>(args[i], this.args.get(i)));
+        }
+
+        exec(author, guild, channel, message, new Arguments(list, herBot.getJda()), profile, event);
 
     }
 
-    private boolean everythingOK(Message message, String[] args, UserProfile profile) {
+    private boolean checkPerm(Message message, UserProfile profile) {
         if (!profile.hasPermission(permission)) {
             var builder = new EmbedBuilder();
             builder.setColor(Color.RED);
@@ -53,30 +63,25 @@ public abstract class AbstractCommand implements CommandExecutor {
             message.reply(builder.build()).mentionRepliedUser(false).queue();
             return false;
         }
+        return true;
+    }
+
+    private boolean checkArgSize(Message message, String[] args) {
         if (args.length < this.args.size()) {
             var builder = new EmbedBuilder();
             builder.setTitle("Špatný počet argumentů");
             builder.setDescription("Chybí ti argumenty: ");
             builder.setColor(Color.RED);
             this.args.listIterator(args.length).forEachRemaining(argument -> {
-                var type = argument.getType();
-                String typeName = ClassUtil.classify(type).getName();
-
-                var nameBuilder = new StringBuilder();
-
-                for (String option : argument.getOptions()) {
-                    nameBuilder.append(option);
-                    nameBuilder.append("|");
-                }
-
-                nameBuilder.deleteCharAt(nameBuilder.length() - 1);
-
-                builder.addField(nameBuilder.toString(), typeName, true);
+                builder.addField(argument.generateDescription(), argument.getName(), true);
             });
             message.reply(builder.build()).mentionRepliedUser(false).queue();
             return false;
         }
+        return true;
+    }
 
+    private boolean checkArgumentType(Message message, String[] args) {
         boolean good = true;
         var builder = new EmbedBuilder();
 
@@ -87,26 +92,11 @@ public abstract class AbstractCommand implements CommandExecutor {
         for (int i = 0; i < this.args.size(); i++) {
             var argument = this.args.get(i);
             var arg = args[i];
-            var type = ClassUtil.classify(argument.getType());
 
-            var lookingGood = switch (type) {
-                case TEXT, UNKNOWN -> true;
-                case NUMBER -> !completedExceptionally(() -> Integer.parseInt(arg));
-            };
+            if (!ExceptionUtil.completedExceptionally(() -> argument.parseArg(arg, herBot.getJda()))) continue;
 
-            if (good) good = lookingGood;
-
-            if (!lookingGood) {
-                var nameBuilder = new StringBuilder();
-
-                for (String option : argument.getOptions()) {
-                    nameBuilder.append(option);
-                    nameBuilder.append("|");
-                }
-
-                nameBuilder.deleteCharAt(nameBuilder.length() - 1);
-                builder.addField(nameBuilder.toString(), String.format("Musí být %s", type.getName()), true);
-            }
+            builder.addField(argument.generateDescription(), argument.getName(), true);
+            good = false;
 
         }
 
@@ -117,7 +107,7 @@ public abstract class AbstractCommand implements CommandExecutor {
         return true;
     }
 
-    public abstract void exec(User author, Guild guild, TextChannel channel, Message message, String[] args, UserProfile profile, GuildMessageReceivedEvent event);
+    public abstract void exec(User author, Guild guild, TextChannel channel, Message message, Arguments args, UserProfile profile, GuildMessageReceivedEvent event);
 
     public String getDescription() {
         return description;

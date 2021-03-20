@@ -1,4 +1,4 @@
-package xyz.kyngs.herbot.handlers.command.commands.economy;
+package xyz.kyngs.herbot.handlers.command.commands.security;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -13,8 +13,9 @@ import xyz.kyngs.herbot.handlers.user.UserProfile;
 
 import java.awt.*;
 
-public class BalanceCommand extends AbstractCommand {
-    public BalanceCommand(HerBot herBot, String description) {
+public class MyPermissionsCommand extends AbstractCommand {
+
+    public MyPermissionsCommand(HerBot herBot, String description) {
         super(herBot, description, "");
     }
 
@@ -22,7 +23,10 @@ public class BalanceCommand extends AbstractCommand {
     public void exec(User author, Guild guild, TextChannel channel, Message message, Arguments args, UserProfile profile, GuildMessageReceivedEvent event) {
         var builder = new EmbedBuilder();
         builder.setColor(Color.GREEN);
-        builder.setTitle(String.format("Na účtě máš %s coinů", profile.getCoins()));
+        builder.setTitle("Toto jsou tvá oprávnění:");
+        for (var perm : herBot.getSecurityHandler().getPermissionsFromNames(profile.getPerms())) {
+            builder.addField(perm.getName(), perm.getDescription(), false);
+        }
         message.reply(builder.build()).mentionRepliedUser(false).queue();
     }
 }
