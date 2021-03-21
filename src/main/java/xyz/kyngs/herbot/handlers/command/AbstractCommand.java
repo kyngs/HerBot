@@ -42,7 +42,8 @@ public abstract class AbstractCommand implements CommandExecutor {
 
     @Override
     public void onCommand(User author, Guild guild, TextChannel channel, Message message, String[] args, UserProfile profile, GuildMessageReceivedEvent event) {
-        if (!checkPerm(message, profile) || !checkArgSize(message, args) || !checkArgumentType(message, args)) return;
+        if (!hasPerm(message, profile) || !rightArgumentSIze(message, args) || !rightArgumentType(message, args))
+            return;
 
         var list = new ArrayList<ImmutableEntry<String, AbstractArgument>>();
 
@@ -54,7 +55,7 @@ public abstract class AbstractCommand implements CommandExecutor {
 
     }
 
-    private boolean checkPerm(Message message, UserProfile profile) {
+    private boolean hasPerm(Message message, UserProfile profile) {
         if (!profile.hasPermission(permission)) {
             var builder = new EmbedBuilder();
             builder.setColor(Color.RED);
@@ -66,7 +67,7 @@ public abstract class AbstractCommand implements CommandExecutor {
         return true;
     }
 
-    private boolean checkArgSize(Message message, String[] args) {
+    private boolean rightArgumentSIze(Message message, String[] args) {
         if (args.length < this.args.size()) {
             var builder = new EmbedBuilder();
             builder.setTitle("Špatný počet argumentů");
@@ -81,7 +82,7 @@ public abstract class AbstractCommand implements CommandExecutor {
         return true;
     }
 
-    private boolean checkArgumentType(Message message, String[] args) {
+    private boolean rightArgumentType(Message message, String[] args) {
         boolean good = true;
         var builder = new EmbedBuilder();
 
