@@ -1,6 +1,5 @@
 package xyz.kyngs.herbot.handlers.command;
 
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -12,8 +11,8 @@ import xyz.kyngs.herbot.handlers.command.argument.Arguments;
 import xyz.kyngs.herbot.handlers.user.UserProfile;
 import xyz.kyngs.herbot.util.ExceptionUtil;
 import xyz.kyngs.herbot.util.ImmutableEntry;
+import xyz.kyngs.herbot.util.embed.EmbedHelper;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +41,7 @@ public abstract class AbstractCommand implements CommandExecutor {
 
     @Override
     public void onCommand(User author, Guild guild, TextChannel channel, Message message, String[] args, UserProfile profile, GuildMessageReceivedEvent event) {
-        if (!hasPerm(message, profile) || !rightArgumentSIze(message, args) || !rightArgumentType(message, args))
+        if (!hasPerm(message, profile, author) || !rightArgumentSIze(message, args, author) || !rightArgumentType(message, args, author))
             return;
 
         var list = new ArrayList<ImmutableEntry<String, AbstractArgument>>();
@@ -55,10 +54,9 @@ public abstract class AbstractCommand implements CommandExecutor {
 
     }
 
-    private boolean hasPerm(Message message, UserProfile profile) {
+    private boolean hasPerm(Message message, UserProfile profile, User author) {
         if (!profile.hasPermission(permission)) {
-            var builder = new EmbedBuilder();
-            builder.setColor(Color.RED);
+            var builder = EmbedHelper.RED.prepare(author);
             builder.setTitle("Tuto akci nemůžeš provést");
             builder.setDescription("Na tuto akci nemáš dostatečné oprávnění");
             message.reply(builder.build()).mentionRepliedUser(false).queue();
@@ -67,12 +65,11 @@ public abstract class AbstractCommand implements CommandExecutor {
         return true;
     }
 
-    private boolean rightArgumentSIze(Message message, String[] args) {
+    private boolean rightArgumentSIze(Message message, String[] args, User author) {
         if (args.length < this.args.size()) {
-            var builder = new EmbedBuilder();
+            var builder = EmbedHelper.RED.prepare(author);
             builder.setTitle("Špatný počet argumentů");
             builder.setDescription("Chybí ti argumenty: ");
-            builder.setColor(Color.RED);
             this.args.listIterator(args.length).forEachRemaining(argument -> {
                 builder.addField(argument.generateDescription(), argument.getName(), true);
             });
@@ -82,13 +79,12 @@ public abstract class AbstractCommand implements CommandExecutor {
         return true;
     }
 
-    private boolean rightArgumentType(Message message, String[] args) {
+    private boolean rightArgumentType(Message message, String[] args, User author) {
         boolean good = true;
-        var builder = new EmbedBuilder();
+        var builder = EmbedHelper.RED.prepare(author);
 
         builder.setTitle("Špatné argumenty");
         builder.setDescription("Tyto argumenty máš špatně:");
-        builder.setColor(Color.RED);
 
         for (int i = 0; i < this.args.size(); i++) {
             var argument = this.args.get(i);

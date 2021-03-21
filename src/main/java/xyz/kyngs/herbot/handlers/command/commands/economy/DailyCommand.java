@@ -10,8 +10,8 @@ import xyz.kyngs.herbot.HerBot;
 import xyz.kyngs.herbot.handlers.command.AbstractCommand;
 import xyz.kyngs.herbot.handlers.command.argument.Arguments;
 import xyz.kyngs.herbot.handlers.user.UserProfile;
+import xyz.kyngs.herbot.util.embed.EmbedHelper;
 
-import java.awt.*;
 import java.time.LocalDate;
 import java.time.Period;
 
@@ -28,19 +28,18 @@ public class DailyCommand extends AbstractCommand {
         var period = Period.between(today, profile.getLastDailyClaim());
         var days = Math.abs(period.getDays());
 
-        var builder = new EmbedBuilder();
-
+        EmbedBuilder builder;
         if (days == 0) {
 
-            builder.setColor(Color.RED);
+            builder = EmbedHelper.RED.prepare(author);
             builder.setTitle("Woah zpomal");
 
             builder.setDescription("Dnešní daily sis už vyzvedl, přijď zítra!");
 
+
         } else {
 
-            builder.setColor(Color.GREEN);
-
+            builder = EmbedHelper.GREEN.prepare(author);
             builder.setTitle("Tady máš coiny");
 
             var toAdd = 2000;
@@ -58,9 +57,9 @@ public class DailyCommand extends AbstractCommand {
             profile.setLastDailyClaim(LocalDate.now());
             profile.addCoins(toAdd);
 
+
         }
         message.reply(builder.build()).mentionRepliedUser(false).queue();
-
 
     }
 }

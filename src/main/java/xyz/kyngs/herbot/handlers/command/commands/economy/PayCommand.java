@@ -1,6 +1,5 @@
 package xyz.kyngs.herbot.handlers.command.commands.economy;
 
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -13,8 +12,7 @@ import xyz.kyngs.herbot.handlers.command.argument.NumberState;
 import xyz.kyngs.herbot.handlers.command.argument.arguments.IntegerArgument;
 import xyz.kyngs.herbot.handlers.command.argument.arguments.UserArgument;
 import xyz.kyngs.herbot.handlers.user.UserProfile;
-
-import java.awt.*;
+import xyz.kyngs.herbot.util.embed.EmbedHelper;
 
 public class PayCommand extends AbstractCommand {
 
@@ -30,9 +28,7 @@ public class PayCommand extends AbstractCommand {
         int amount = args.getArgument(1);
 
         if (amount > profile.getCoins()) {
-            var builder = new EmbedBuilder();
-            builder.setTitle("Na tuto akci nemáš dostatek prostředků");
-            builder.setColor(Color.RED);
+            var builder = EmbedHelper.TOO_POOR.prepare(author);
             message.reply(builder.build()).mentionRepliedUser(false).queue();
             return;
         }
@@ -42,10 +38,8 @@ public class PayCommand extends AbstractCommand {
         targetProfile.addCoins(amount);
         herBot.getUserHandler().saveUser(targetProfile, user.getId());
 
-        var builder = new EmbedBuilder();
+        var builder = EmbedHelper.SUCCESS.prepare(author);
 
-        builder.setColor(Color.GREEN);
-        builder.setTitle("Úspěch");
         builder.setDescription("Coiny odeslány");
 
         message.reply(builder.build()).mentionRepliedUser(false).queue();

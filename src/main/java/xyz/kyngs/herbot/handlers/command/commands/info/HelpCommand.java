@@ -1,6 +1,5 @@
 package xyz.kyngs.herbot.handlers.command.commands.info;
 
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
@@ -11,8 +10,8 @@ import xyz.kyngs.herbot.HerBot;
 import xyz.kyngs.herbot.handlers.command.AbstractCommand;
 import xyz.kyngs.herbot.handlers.command.argument.Arguments;
 import xyz.kyngs.herbot.handlers.user.UserProfile;
+import xyz.kyngs.herbot.util.embed.EmbedHelper;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,10 +28,9 @@ public class HelpCommand extends AbstractCommand {
         var commandHandler = herBot.getCommandHandler();
 
         var out = new MessageBuilder();
-        var embed = new EmbedBuilder();
+        var embed = EmbedHelper.GREEN.prepare(author);
 
         embed.setTitle("Všechny příkazy: ");
-        embed.setColor(Color.GREEN);
 
         var mergeMap = new HashMap<AbstractCommand, List<String>>();
 

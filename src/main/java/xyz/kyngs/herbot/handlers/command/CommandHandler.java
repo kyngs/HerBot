@@ -1,14 +1,13 @@
 package xyz.kyngs.herbot.handlers.command;
 
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import xyz.kyngs.herbot.HerBot;
 import xyz.kyngs.herbot.handlers.AbstractHandler;
+import xyz.kyngs.herbot.util.embed.EmbedHelper;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -85,8 +84,7 @@ public class CommandHandler extends AbstractHandler {
             command.onCommand(event.getAuthor(), event.getGuild(), event.getChannel(), message, Arrays.copyOfRange(args, 1, args.length), profile, event);
             userHandler.saveUser(profile, userID);
         } catch (Exception e) {
-            event.getChannel().sendMessage(new EmbedBuilder()
-                    .setColor(Color.RED)
+            event.getChannel().sendMessage(EmbedHelper.RED.prepare(event.getAuthor())
                     .setTitle("Chyba!")
                     .setDescription("Nastala chyba při spouštění tohoto příkazu, chyba byla automaticky ohlášena! Omlouvám se za způsobené potíže.")
                     .build()

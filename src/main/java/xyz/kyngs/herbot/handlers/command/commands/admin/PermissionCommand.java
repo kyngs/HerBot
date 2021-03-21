@@ -1,6 +1,5 @@
 package xyz.kyngs.herbot.handlers.command.commands.admin;
 
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -13,8 +12,7 @@ import xyz.kyngs.herbot.handlers.command.argument.arguments.OptionArgument;
 import xyz.kyngs.herbot.handlers.command.argument.arguments.StringArgument;
 import xyz.kyngs.herbot.handlers.command.argument.arguments.UserArgument;
 import xyz.kyngs.herbot.handlers.user.UserProfile;
-
-import java.awt.*;
+import xyz.kyngs.herbot.util.embed.EmbedHelper;
 
 public class PermissionCommand extends AbstractCommand {
 
@@ -34,8 +32,7 @@ public class PermissionCommand extends AbstractCommand {
         String action = args.getArgument(0);
 
         if (herBot.getSecurityHandler().getLoadedPermissions().get(permission) == null) {
-            var builder = new EmbedBuilder();
-            builder.setColor(Color.RED);
+            var builder = EmbedHelper.RED.prepare(author);
             builder.setTitle("Toto oprávnění neexistuje");
             builder.setDescription("Lituji, ale toto oprávnění neexistuje, pokud chceš zobrazit všechna existující oprávnění, použij .allperms");
             message.reply(builder.build()).mentionRepliedUser(false).queue();
@@ -43,9 +40,7 @@ public class PermissionCommand extends AbstractCommand {
         }
 
         if (!profile.hasPermission(permission)) {
-            var builder = new EmbedBuilder();
-            builder.setColor(Color.RED);
-            builder.setTitle("Tuto akci nemůžeš provést");
+            var builder = EmbedHelper.CANNOT_PERFORM.prepare(author);
             builder.setDescription("Nemáš oprávnění pro upravování tohoto oprávnění");
             message.reply(builder.build()).mentionRepliedUser(false).queue();
             return;
@@ -58,9 +53,7 @@ public class PermissionCommand extends AbstractCommand {
         }
 
         herBot.getUserHandler().saveUser(targetProfile, user.getId());
-        var builder = new EmbedBuilder();
-        builder.setColor(Color.GREEN);
-        builder.setTitle("Úspěch");
+        var builder = EmbedHelper.SUCCESS.prepare(author);
         builder.setDescription("Oprávnění úspěšně aktualizováno");
         message.reply(builder.build()).mentionRepliedUser(false).queue();
     }

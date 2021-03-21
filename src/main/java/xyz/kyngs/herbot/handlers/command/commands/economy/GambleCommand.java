@@ -12,8 +12,8 @@ import xyz.kyngs.herbot.handlers.command.argument.Arguments;
 import xyz.kyngs.herbot.handlers.command.argument.NumberState;
 import xyz.kyngs.herbot.handlers.command.argument.arguments.IntegerArgument;
 import xyz.kyngs.herbot.handlers.user.UserProfile;
+import xyz.kyngs.herbot.util.embed.EmbedHelper;
 
-import java.awt.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GambleCommand extends AbstractCommand {
@@ -30,28 +30,25 @@ public class GambleCommand extends AbstractCommand {
         int amount = args.getArgument(0);
 
         if (amount > profile.getCoins()) {
-            var builder = new EmbedBuilder();
-            builder.setTitle("Na tuto akci nemáš dostatek prostředků");
-            builder.setColor(Color.RED);
+            var builder = EmbedHelper.TOO_POOR.prepare(author);
             message.reply(builder.build()).mentionRepliedUser(false).queue();
             return;
         }
 
         boolean win = random.nextInt(100) > 50;
-        var builder = new EmbedBuilder();
 
+        EmbedBuilder builder;
         if (win) {
-            builder.setColor(Color.GREEN);
+            builder = EmbedHelper.GREEN.prepare(author);
             builder.setTitle("Výhra");
             builder.setDescription(String.format("Na účet ti bylo přidáno %s coinů", amount));
             profile.addCoins(amount);
         } else {
-            builder.setColor(Color.RED);
+            builder = EmbedHelper.RED.prepare(author);
             builder.setTitle("Prohra");
             builder.setDescription(String.format("Z účtu ti bylo odebráno %s coinů", amount));
             profile.removeCoins(amount);
         }
-
         message.reply(builder.build()).mentionRepliedUser(false).queue();
 
     }
