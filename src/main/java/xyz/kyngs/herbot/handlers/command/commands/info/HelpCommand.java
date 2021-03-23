@@ -1,6 +1,5 @@
-package xyz.kyngs.herbot.handlers.command.commands;
+package xyz.kyngs.herbot.handlers.command.commands.info;
 
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
@@ -9,8 +8,10 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import xyz.kyngs.herbot.HerBot;
 import xyz.kyngs.herbot.handlers.command.AbstractCommand;
+import xyz.kyngs.herbot.handlers.command.argument.Arguments;
+import xyz.kyngs.herbot.handlers.user.UserProfile;
+import xyz.kyngs.herbot.util.embed.EmbedHelper;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,18 +20,17 @@ import java.util.Map;
 public class HelpCommand extends AbstractCommand {
 
     public HelpCommand(HerBot herBot, String description) {
-        super(herBot, description);
+        super(herBot, description, "");
     }
 
     @Override
-    public void onCommand(User author, Guild guild, TextChannel channel, Message message, String[] args, GuildMessageReceivedEvent event) {
+    public void exec(User author, Guild guild, TextChannel channel, Message message, Arguments args, UserProfile profile, GuildMessageReceivedEvent event) {
         var commandHandler = herBot.getCommandHandler();
 
         var out = new MessageBuilder();
-        var embed = new EmbedBuilder();
+        var embed = EmbedHelper.GREEN.prepare(author);
 
         embed.setTitle("Všechny příkazy: ");
-        embed.setColor(Color.GREEN);
 
         var mergeMap = new HashMap<AbstractCommand, List<String>>();
 
@@ -39,6 +39,7 @@ public class HelpCommand extends AbstractCommand {
         }
 
         for (Map.Entry<AbstractCommand, List<String>> entry : mergeMap.entrySet()) {
+            if (!profile.hasPermission(entry.getKey().getPermission())) continue;
             var name = new StringBuilder();
             for (var s : entry.getValue()) {
                 name.append(s).append(", ");

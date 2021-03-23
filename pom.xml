@@ -80,7 +80,7 @@
         <dependency>
             <groupId>com.github.kyngs</groupId>
             <artifactId>EasyMySQL</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>e50cb394b6</version>
         </dependency>
         <dependency>
             <groupId>net.dv8tion</groupId>

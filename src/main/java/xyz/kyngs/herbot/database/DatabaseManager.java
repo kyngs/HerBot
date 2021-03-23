@@ -34,6 +34,8 @@ public class DatabaseManager {
         mySQL.sync().schedule(connection -> {
             connection.prepareStatement("CREATE TABLE IF NOT EXISTS info_messages (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, channel_id VARCHAR(256) NOT NULL, message TEXT NOT NULL)").execute();
             connection.prepareStatement("CREATE TABLE IF NOT EXISTS anti_duplication (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, channel_id VARCHAR(256) NOT NULL, link TEXT NOT NULL)").execute();
+            connection.prepareStatement("CREATE TABLE IF NOT EXISTS user_data (coins BIGINT NOT NULL, user_id VARCHAR(256) NOT NULL PRIMARY KEY, xp BIGINT NOT NULL, daily_streak INT NOT NULL, last_daily_claim DATE NOT NULL, permissions TEXT NOT NULL);").execute();
+            connection.prepareStatement("CREATE TABLE IF NOT EXISTS permissions (name VARCHAR(256) NOT NULL PRIMARY KEY, description VARCHAR(1024) NOT NULL)").execute();
         });
     }
 
