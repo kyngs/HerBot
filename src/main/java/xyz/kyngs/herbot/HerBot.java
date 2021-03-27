@@ -71,7 +71,7 @@ public class HerBot {
         }
 
         try {
-            jda = JDABuilder.createDefault(configuration.getString("token"), List.of(GatewayIntent.values()))
+            jda = JDABuilder.create(configuration.getString("token"), List.of(GatewayIntent.values()))
                     .setEnableShutdownHook(false)
                     .build();
             jda.awaitReady();
