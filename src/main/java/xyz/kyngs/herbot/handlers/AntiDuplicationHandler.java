@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 
+import static xyz.kyngs.herbot.util.UrlUtil.*;
+
 public class AntiDuplicationHandler extends AbstractHandler {
 
     private final List<String> channelsToWatch;
@@ -47,9 +49,10 @@ public class AntiDuplicationHandler extends AbstractHandler {
             boolean deleted = false;
 
             for (String url : urls) {
+                var normalizedUrl = tryNormalizeUrl(url);
                 var ps = connection.prepareStatement("SELECT id FROM anti_duplication WHERE channel_id=? AND link=?");
                 ps.setString(1, channel.getId());
-                ps.setString(2, url);
+                ps.setString(2, normalizedUrl);
                 var rs = ps.executeQuery();
                 if (rs.next()) {
                     if (!deleted) {
@@ -64,7 +67,7 @@ public class AntiDuplicationHandler extends AbstractHandler {
                 } else {
                     ps = connection.prepareStatement("INSERT INTO anti_duplication (channel_id, link) VALUES (?, ?)");
                     ps.setString(1, channel.getId());
-                    ps.setString(2, url);
+                    ps.setString(2, normalizedUrl);
                     ps.execute();
                 }
             }
