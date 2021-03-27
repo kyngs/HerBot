@@ -16,7 +16,7 @@ public class UrlUtil {
         URI normalizedUri;
         try {
             var scheme = uri.getScheme();
-            if (scheme.equals("http")) {
+            if (scheme != null && scheme.equals("http")) {
                 scheme = "https";
             }
 
