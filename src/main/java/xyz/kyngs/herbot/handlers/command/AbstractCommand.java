@@ -70,9 +70,7 @@ public abstract class AbstractCommand implements CommandExecutor {
             var builder = EmbedHelper.RED.prepare(author);
             builder.setTitle("Špatný počet argumentů");
             builder.setDescription("Chybí ti argumenty: ");
-            this.args.listIterator(args.length).forEachRemaining(argument -> {
-                builder.addField(argument.generateDescription(), argument.getName(), true);
-            });
+            this.args.listIterator(args.length).forEachRemaining(argument -> builder.addField(argument.generateDescription(), argument.getName(), true));
             message.reply(builder.build()).mentionRepliedUser(false).queue();
             return false;
         }

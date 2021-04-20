@@ -21,8 +21,8 @@ public class InfoCommand extends AbstractCommand {
         var builder = EmbedHelper.GREEN.prepare(author);
 
         builder.setTitle("Informace");
-        builder.addField("Verze:", "1.2", false);
-        builder.addField("Sestavení:", "4", false);
+        builder.addField("Verze:", "1.3", false);
+        builder.addField("Sestavení:", "5", false);
         builder.addField("Máš nějaký dotaz k botovi, nebo jsi našel chybu? Zkontaktuj mě.", "Discord: kyngs#0666 Twitch: kyngskyngs", false);
 
         message.reply(builder.build()).mentionRepliedUser(false).queue();
