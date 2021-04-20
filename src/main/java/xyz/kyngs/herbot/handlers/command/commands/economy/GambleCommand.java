@@ -12,19 +12,21 @@ import xyz.kyngs.herbot.handlers.command.argument.Arguments;
 import xyz.kyngs.herbot.handlers.command.argument.NumberState;
 import xyz.kyngs.herbot.handlers.command.argument.arguments.IntegerArgument;
 import xyz.kyngs.herbot.handlers.user.UserProfile;
+import xyz.kyngs.herbot.util.ExecutionResult;
 import xyz.kyngs.herbot.util.embed.EmbedHelper;
 
+import java.time.Duration;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GambleCommand extends AbstractCommand {
 
     public GambleCommand(HerBot herBot, String description) {
-        super(herBot, description, "");
+        super(herBot, description, "", Duration.ofSeconds(5));
         addArg(new IntegerArgument(NumberState.POSITIVE, "sázka"));
     }
 
     @Override
-    public void exec(User author, Guild guild, TextChannel channel, Message message, Arguments args, UserProfile profile, GuildMessageReceivedEvent event) {
+    public ExecutionResult exec(User author, Guild guild, TextChannel channel, Message message, Arguments args, UserProfile profile, GuildMessageReceivedEvent event) {
         var random = ThreadLocalRandom.current();
 
         int amount = args.getArgument(0);
@@ -32,7 +34,7 @@ public class GambleCommand extends AbstractCommand {
         if (amount > profile.getCoins()) {
             var builder = EmbedHelper.TOO_POOR.prepare(author);
             message.reply(builder.build()).mentionRepliedUser(false).queue();
-            return;
+            return ExecutionResult.FAILURE;
         }
 
         boolean win = random.nextInt(100) > 50;
@@ -50,6 +52,8 @@ public class GambleCommand extends AbstractCommand {
             profile.removeCoins(amount);
         }
         message.reply(builder.build()).mentionRepliedUser(false).queue();
+
+        return ExecutionResult.SUCCESS;
 
     }
 }

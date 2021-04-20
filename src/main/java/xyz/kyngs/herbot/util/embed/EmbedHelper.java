@@ -34,6 +34,11 @@ public enum EmbedHelper {
     TOO_POOR(embedBuilder -> {
         RED.consumer.accept(embedBuilder);
         embedBuilder.setTitle("Na tuto akci nemáš dostatek prostředků");
+    }),
+
+    COOLDOWN(embedBuilder -> {
+        RED.consumer.accept(embedBuilder);
+        embedBuilder.setTitle("Zpomal");
     });
 
     private final Consumer<EmbedBuilder> consumer;

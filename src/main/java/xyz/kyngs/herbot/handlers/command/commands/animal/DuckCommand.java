@@ -9,6 +9,7 @@ import xyz.kyngs.herbot.HerBot;
 import xyz.kyngs.herbot.handlers.command.AbstractCommand;
 import xyz.kyngs.herbot.handlers.command.argument.Arguments;
 import xyz.kyngs.herbot.handlers.user.UserProfile;
+import xyz.kyngs.herbot.util.ExecutionResult;
 import xyz.kyngs.herbot.util.MessageUtil;
 
 public class DuckCommand extends AbstractCommand {
@@ -18,7 +19,8 @@ public class DuckCommand extends AbstractCommand {
     }
 
     @Override
-    public void exec(User author, Guild guild, TextChannel channel, Message message, Arguments args, UserProfile profile, GuildMessageReceivedEvent event) {
+    public ExecutionResult exec(User author, Guild guild, TextChannel channel, Message message, Arguments args, UserProfile profile, GuildMessageReceivedEvent event) {
         MessageUtil.replyWhenArrive(herBot.getAnimalUtil().readJsonURL("https://random-d.uk/api/v2/random", "OOF! Nepodařilo se načíst kachničku :("), message, "Načítání kachničky <:PauseChamp:811729611079024731>");
+        return ExecutionResult.SUCCESS;
     }
 }

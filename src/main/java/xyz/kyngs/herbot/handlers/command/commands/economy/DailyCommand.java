@@ -10,6 +10,7 @@ import xyz.kyngs.herbot.HerBot;
 import xyz.kyngs.herbot.handlers.command.AbstractCommand;
 import xyz.kyngs.herbot.handlers.command.argument.Arguments;
 import xyz.kyngs.herbot.handlers.user.UserProfile;
+import xyz.kyngs.herbot.util.ExecutionResult;
 import xyz.kyngs.herbot.util.embed.EmbedHelper;
 
 import java.time.LocalDate;
@@ -22,7 +23,7 @@ public class DailyCommand extends AbstractCommand {
     }
 
     @Override
-    public void exec(User author, Guild guild, TextChannel channel, Message message, Arguments args, UserProfile profile, GuildMessageReceivedEvent event) {
+    public ExecutionResult exec(User author, Guild guild, TextChannel channel, Message message, Arguments args, UserProfile profile, GuildMessageReceivedEvent event) {
 
         var today = LocalDate.now();
         var period = Period.between(today, profile.getLastDailyClaim());
@@ -35,7 +36,6 @@ public class DailyCommand extends AbstractCommand {
             builder.setTitle("Woah zpomal");
 
             builder.setDescription("Dnešní daily sis už vyzvedl, přijď zítra!");
-
 
         } else {
 
@@ -57,9 +57,9 @@ public class DailyCommand extends AbstractCommand {
             profile.setLastDailyClaim(LocalDate.now());
             profile.addCoins(toAdd);
 
-
         }
         message.reply(builder.build()).mentionRepliedUser(false).queue();
 
+        return ExecutionResult.SUCCESS;
     }
 }

@@ -12,6 +12,7 @@ import xyz.kyngs.herbot.handlers.command.argument.NumberState;
 import xyz.kyngs.herbot.handlers.command.argument.arguments.IntegerArgument;
 import xyz.kyngs.herbot.handlers.command.argument.arguments.UserArgument;
 import xyz.kyngs.herbot.handlers.user.UserProfile;
+import xyz.kyngs.herbot.util.ExecutionResult;
 import xyz.kyngs.herbot.util.embed.EmbedHelper;
 
 public class PayCommand extends AbstractCommand {
@@ -23,14 +24,14 @@ public class PayCommand extends AbstractCommand {
     }
 
     @Override
-    public void exec(User author, Guild guild, TextChannel channel, Message message, Arguments args, UserProfile profile, GuildMessageReceivedEvent event) {
+    public ExecutionResult exec(User author, Guild guild, TextChannel channel, Message message, Arguments args, UserProfile profile, GuildMessageReceivedEvent event) {
         User user = args.getArgument(0);
         int amount = args.getArgument(1);
 
         if (amount > profile.getCoins()) {
             var builder = EmbedHelper.TOO_POOR.prepare(author);
             message.reply(builder.build()).mentionRepliedUser(false).queue();
-            return;
+            return ExecutionResult.FAILURE;
         }
 
         var targetProfile = herBot.getUserHandler().getUser(user.getId());
@@ -43,5 +44,6 @@ public class PayCommand extends AbstractCommand {
         builder.setDescription("Coiny odeslány");
 
         message.reply(builder.build()).mentionRepliedUser(false).queue();
+        return ExecutionResult.SUCCESS;
     }
 }

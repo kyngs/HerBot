@@ -9,6 +9,7 @@ import xyz.kyngs.herbot.HerBot;
 import xyz.kyngs.herbot.handlers.command.AbstractCommand;
 import xyz.kyngs.herbot.handlers.command.argument.Arguments;
 import xyz.kyngs.herbot.handlers.user.UserProfile;
+import xyz.kyngs.herbot.util.ExecutionResult;
 import xyz.kyngs.herbot.util.embed.EmbedHelper;
 
 public class MyPermissionsCommand extends AbstractCommand {
@@ -18,12 +19,13 @@ public class MyPermissionsCommand extends AbstractCommand {
     }
 
     @Override
-    public void exec(User author, Guild guild, TextChannel channel, Message message, Arguments args, UserProfile profile, GuildMessageReceivedEvent event) {
+    public ExecutionResult exec(User author, Guild guild, TextChannel channel, Message message, Arguments args, UserProfile profile, GuildMessageReceivedEvent event) {
         var builder = EmbedHelper.GREEN.prepare(author);
         builder.setTitle("Toto jsou tvá oprávnění:");
         for (var perm : herBot.getSecurityHandler().getPermissionsFromNames(profile.getPerms())) {
             builder.addField(perm.getName(), perm.getDescription(), false);
         }
         message.reply(builder.build()).mentionRepliedUser(false).queue();
+        return ExecutionResult.SUCCESS;
     }
 }
