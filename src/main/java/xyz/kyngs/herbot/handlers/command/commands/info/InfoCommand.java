@@ -9,7 +9,11 @@ import xyz.kyngs.herbot.HerBot;
 import xyz.kyngs.herbot.handlers.command.AbstractCommand;
 import xyz.kyngs.herbot.handlers.command.argument.Arguments;
 import xyz.kyngs.herbot.handlers.user.UserProfile;
+import xyz.kyngs.herbot.util.ExecutionResult;
 import xyz.kyngs.herbot.util.embed.EmbedHelper;
+
+import static xyz.kyngs.herbot.HerBot.BUILD;
+import static xyz.kyngs.herbot.HerBot.VERSION;
 
 public class InfoCommand extends AbstractCommand {
     public InfoCommand(HerBot herBot, String description) {
@@ -17,15 +21,17 @@ public class InfoCommand extends AbstractCommand {
     }
 
     @Override
-    public void exec(User author, Guild guild, TextChannel channel, Message message, Arguments args, UserProfile profile, GuildMessageReceivedEvent event) {
+    public ExecutionResult exec(User author, Guild guild, TextChannel channel, Message message, Arguments args, UserProfile profile, GuildMessageReceivedEvent event) {
         var builder = EmbedHelper.GREEN.prepare(author);
 
         builder.setTitle("Informace");
-        builder.addField("Verze:", "1.3", false);
-        builder.addField("Sestavení:", "5", false);
+        builder.addField("Verze:", VERSION, false);
+        builder.addField("Sestavení:", String.valueOf(BUILD), false);
         builder.addField("Máš nějaký dotaz k botovi, nebo jsi našel chybu? Zkontaktuj mě.", "Discord: kyngs#0666 Twitch: kyngskyngs", false);
 
         message.reply(builder.build()).mentionRepliedUser(false).queue();
+
+        return ExecutionResult.SUCCESS;
 
     }
 }

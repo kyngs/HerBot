@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 
-import static xyz.kyngs.herbot.util.UrlUtil.*;
+import static xyz.kyngs.herbot.util.UrlUtil.tryNormalizeUrl;
 
 public class AntiDuplicationHandler extends AbstractHandler {
 
@@ -60,7 +60,7 @@ public class AntiDuplicationHandler extends AbstractHandler {
                         deleted = true;
                     }
                     var builder = new EmbedBuilder();
-                    builder.setTitle("Odkaz již někdo submitnul");
+                    builder.setTitle("Tento odkaz již někdo vložil.");
                     builder.setDescription(url);
                     builder.setColor(Color.GREEN);
                     spamChannel.sendMessage(builder.build()).append(String.format("<@%s>", event.getAuthor().getId())).queue();

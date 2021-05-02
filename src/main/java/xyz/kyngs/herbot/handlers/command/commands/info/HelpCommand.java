@@ -10,6 +10,7 @@ import xyz.kyngs.herbot.HerBot;
 import xyz.kyngs.herbot.handlers.command.AbstractCommand;
 import xyz.kyngs.herbot.handlers.command.argument.Arguments;
 import xyz.kyngs.herbot.handlers.user.UserProfile;
+import xyz.kyngs.herbot.util.ExecutionResult;
 import xyz.kyngs.herbot.util.embed.EmbedHelper;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class HelpCommand extends AbstractCommand {
     }
 
     @Override
-    public void exec(User author, Guild guild, TextChannel channel, Message message, Arguments args, UserProfile profile, GuildMessageReceivedEvent event) {
+    public ExecutionResult exec(User author, Guild guild, TextChannel channel, Message message, Arguments args, UserProfile profile, GuildMessageReceivedEvent event) {
         var commandHandler = herBot.getCommandHandler();
 
         var out = new MessageBuilder();
@@ -51,6 +52,8 @@ public class HelpCommand extends AbstractCommand {
         out.setEmbed(embed.build());
 
         message.reply(out.build()).mentionRepliedUser(false).queue();
+
+        return ExecutionResult.SUCCESS;
 
     }
 }

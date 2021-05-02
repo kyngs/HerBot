@@ -12,6 +12,7 @@ import xyz.kyngs.herbot.handlers.command.argument.arguments.OptionArgument;
 import xyz.kyngs.herbot.handlers.command.argument.arguments.StringArgument;
 import xyz.kyngs.herbot.handlers.command.argument.arguments.UserArgument;
 import xyz.kyngs.herbot.handlers.user.UserProfile;
+import xyz.kyngs.herbot.util.ExecutionResult;
 import xyz.kyngs.herbot.util.embed.EmbedHelper;
 
 public class PermissionCommand extends AbstractCommand {
@@ -24,7 +25,7 @@ public class PermissionCommand extends AbstractCommand {
     }
 
     @Override
-    public void exec(User author, Guild guild, TextChannel channel, Message message, Arguments args, UserProfile profile, GuildMessageReceivedEvent event) {
+    public ExecutionResult exec(User author, Guild guild, TextChannel channel, Message message, Arguments args, UserProfile profile, GuildMessageReceivedEvent event) {
         User user = args.getArgument(1);
 
         var targetProfile = herBot.getUserHandler().getUser(user.getId());
@@ -36,14 +37,14 @@ public class PermissionCommand extends AbstractCommand {
             builder.setTitle("Toto oprávnění neexistuje");
             builder.setDescription("Lituji, ale toto oprávnění neexistuje, pokud chceš zobrazit všechna existující oprávnění, použij .allperms");
             message.reply(builder.build()).mentionRepliedUser(false).queue();
-            return;
+            return ExecutionResult.FAILURE;
         }
 
         if (!profile.hasPermission(permission)) {
             var builder = EmbedHelper.CANNOT_PERFORM.prepare(author);
             builder.setDescription("Nemáš oprávnění pro upravování tohoto oprávnění");
             message.reply(builder.build()).mentionRepliedUser(false).queue();
-            return;
+            return ExecutionResult.FAILURE;
         }
 
         if (action.contentEquals("give")) {
@@ -56,5 +57,6 @@ public class PermissionCommand extends AbstractCommand {
         var builder = EmbedHelper.SUCCESS.prepare(author);
         builder.setDescription("Oprávnění úspěšně aktualizováno");
         message.reply(builder.build()).mentionRepliedUser(false).queue();
+        return ExecutionResult.SUCCESS;
     }
 }
