@@ -46,8 +46,8 @@ public class HerBot {
             "(?:^|[\\W])((ht|f)tp(s?)://|www\\.)(([\\w\\-]+\\.)+?([\\w\\-.~]+/?)*[\\p{Alnum}.,%_=?&#\\-+()\\[\\]*$~@!:/{};']*)",
             Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL
     );
-    public static final String VERSION = "1.4";
-    public static final int BUILD = 6;
+    public static final String VERSION = "1.5";
+    public static final int BUILD = 7;
 
     private final JDA jda;
     @org.jetbrains.annotations.NotNull
