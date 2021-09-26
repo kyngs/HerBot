@@ -50,6 +50,18 @@ public class AntiDuplicationHandler extends AbstractHandler {
 
             for (String url : urls) {
                 var normalizedUrl = tryNormalizeUrl(url);
+                //A very dirty fix, but I'm too lazy to implement a proper solution.
+                var exceptions = new String[]{"https://youtube.com/", "www.youtube.com", "https://www.youtube.com/"};
+                var cont = false;
+                for (var exception : exceptions) {
+                    if (normalizedUrl.startsWith(exception)) {
+                        cont = true;
+                        break;
+                    }
+                }
+
+                if (cont) continue;
+
                 var ps = connection.prepareStatement("SELECT id FROM anti_duplication WHERE channel_id=? AND link=?");
                 ps.setString(1, channel.getId());
                 ps.setString(2, normalizedUrl);
