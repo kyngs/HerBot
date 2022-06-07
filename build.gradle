@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'xyz.kyngs.herbot'
-version '1.0-SNAPSHOT'
+version '2.0.0-dev+0'
 
 repositories {
     mavenCentral()
