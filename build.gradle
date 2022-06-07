@@ -12,6 +12,11 @@ repositories {
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+
+    implementation 'net.dv8tion:JDA:5.0.0-alpha.11'
+    implementation 'ch.qos.logback:logback-classic:1.2.11'
+
+    implementation 'co.aikar:acf-jda-slash:0.5.1-SNAPSHOT'
 }
 
 test {
