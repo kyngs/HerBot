@@ -1,22 +1,31 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'net.kyori.blossom' version '1.3.0'
 }
 
 group 'xyz.kyngs.herbot'
 version '2.0.0-dev+0'
 
 repositories {
+    mavenLocal()
     mavenCentral()
+
+    maven { url 'https://jitpack.io/' }
 }
 
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 
-    implementation 'net.dv8tion:JDA:5.0.0-alpha.11'
+    implementation 'net.dv8tion:JDA:5.0.0-alpha.17'
     implementation 'ch.qos.logback:logback-classic:1.2.11'
 
     implementation 'co.aikar:acf-jda-slash:0.5.1-SNAPSHOT'
+
+    implementation 'com.github.oneblock-cz.daemsus:Daemons:0.2.0'
+
+    implementation 'org.mongodb:mongodb-driver-sync:4.7.1'
 }
 
 test {
