@@ -1,16 +1,22 @@
 package xyz.kyngs.herbot.bot;
 
+import ch.qos.logback.classic.Level;
 import cz.oneblock.core.BootLoader;
 import cz.oneblock.core.SystemDaemon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.kyngs.herbot.bot.command.CommandDaemon;
+import xyz.kyngs.herbot.bot.dupe.AntiDuplicationDaemon;
 
 import java.io.File;
 import java.io.InputStream;
 import java.util.Scanner;
 
 public class HerBot implements BootLoader {
+
+    static {
+        ((ch.qos.logback.classic.Logger) LoggerFactory.getLogger("org.mongodb.driver")).setLevel(Level.WARN);
+    }
 
     public static final Logger LOGGER = LoggerFactory.getLogger(HerBot.class);
     public static final String VERSION = "@version@";
@@ -19,6 +25,7 @@ public class HerBot implements BootLoader {
         var system = new SystemDaemon(new HerBot(), d -> true);
 
         system.registerDaemon(CommandDaemon.class);
+        system.registerDaemon(AntiDuplicationDaemon.class);
 
         system.load();
         system.start();
