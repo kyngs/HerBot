@@ -3,6 +3,9 @@ package xyz.kyngs.herbot.bot;
 import cz.oneblock.core.ProjectDaemon;
 import cz.oneblock.core.SystemDaemon;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 import xyz.kyngs.herbot.bot.command.CommandDaemon;
 import xyz.kyngs.herbot.bot.database.DatabaseDaemon;
 import xyz.kyngs.herbot.bot.jda.JDADaemon;
@@ -23,6 +26,20 @@ public class HerBotDaemon extends ProjectDaemon<HerBot> {
         whenLoaded(CommandDaemon.class, daemon -> commandDaemon = daemon);
 
         jda = jdaDaemon == null ? null : jdaDaemon.getJda();
+
+        if (jda != null) {
+            jda.addEventListener(new ListenerAdapter() {
+                @Override
+                public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+                    if (event.isWebhookMessage() || !event.isFromGuild() || event.getAuthor().isBot()) return;
+
+                    handleNewMessage(event);
+                }
+            });
+        }
+    }
+
+    protected void handleNewMessage(MessageReceivedEvent event) {
     }
 
     public CommandDaemon getCommandDaemon() {

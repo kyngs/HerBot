@@ -5,9 +5,7 @@ import cz.oneblock.core.SystemDaemon;
 import cz.oneblock.core.configuration.ConfigurateSection;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bson.Document;
-import org.jetbrains.annotations.NotNull;
 import xyz.kyngs.herbot.bot.HerBotDaemon;
 
 import java.awt.*;
@@ -31,13 +29,6 @@ public class AntiDuplicationDaemon extends HerBotDaemon {
         super(systemDaemon);
 
         loadConfiguration(getConfiguration());
-
-        jda.addEventListener(new ListenerAdapter() {
-            @Override
-            public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-                onMessage(event);
-            }
-        });
     }
 
     public static String tryNormalizeUrl(String url) {
@@ -74,7 +65,8 @@ public class AntiDuplicationDaemon extends HerBotDaemon {
         return true;
     }
 
-    private void onMessage(MessageReceivedEvent event) {
+    @Override
+    protected void handleNewMessage(MessageReceivedEvent event) {
         var message = event.getMessage();
         var channel = event.getChannel();
         var text = message.getContentRaw();
@@ -131,14 +123,17 @@ public class AntiDuplicationDaemon extends HerBotDaemon {
         }
 
         if (!deleted) {
-            collection.insertMany(urls.stream().map(url -> {
+            var res = urls.stream().map(url -> {
                 var normalized = tryNormalizeUrl(url);
                 var document = new Document();
                 document.put("url", normalized);
                 document.put("channel", channel.getIdLong());
                 return document;
-            }).toList());
-        }
+            }).toList();
 
+            if (res.size() > 0) {
+                collection.insertMany(res);
+            }
+        }
     }
 }
