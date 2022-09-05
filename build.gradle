@@ -5,7 +5,11 @@ plugins {
 }
 
 group 'xyz.kyngs.herbot'
-version '2.0.0-dev+0'
+version '2.0.0-dev.0'
+
+blossom {
+    replaceToken '@version@', version
+}
 
 repositories {
     mavenLocal()
@@ -26,6 +30,7 @@ dependencies {
     implementation 'com.github.oneblock-cz.daemsus:Daemons:0.2.0'
 
     implementation 'org.mongodb:mongodb-driver-sync:4.7.1'
+    implementation 'com.google.code.gson:gson:2.8.8'
 }
 
 test {

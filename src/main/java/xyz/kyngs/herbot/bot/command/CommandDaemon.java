@@ -28,6 +28,12 @@ public class CommandDaemon extends HerBotDaemon {
 
     @Override
     public void start() {
+        registerCommand(new InfoCommand(this));
+    }
+
+    @Override
+    public CommandDaemon getCommandDaemon() {
+        return this;
     }
 
     @Override

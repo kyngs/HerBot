@@ -5,6 +5,7 @@ import cz.oneblock.core.BootLoader;
 import cz.oneblock.core.SystemDaemon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import xyz.kyngs.herbot.bot.animal.AnimalDaemon;
 import xyz.kyngs.herbot.bot.command.CommandDaemon;
 import xyz.kyngs.herbot.bot.dupe.AntiDuplicationDaemon;
 import xyz.kyngs.herbot.bot.info.InfoDaemon;
@@ -28,6 +29,7 @@ public class HerBot implements BootLoader {
         system.registerDaemon(CommandDaemon.class);
         system.registerDaemon(AntiDuplicationDaemon.class);
         system.registerDaemon(InfoDaemon.class);
+        system.registerDaemon(AnimalDaemon.class);
 
         system.load();
         system.start();

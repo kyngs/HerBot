@@ -1,5 +1,6 @@
 package xyz.kyngs.herbot.bot;
 
+import co.aikar.commands.BaseCommand;
 import cz.oneblock.core.ProjectDaemon;
 import cz.oneblock.core.SystemDaemon;
 import net.dv8tion.jda.api.JDA;
@@ -37,6 +38,10 @@ public class HerBotDaemon extends ProjectDaemon<HerBot> {
                 }
             });
         }
+    }
+
+    public void registerCommand(BaseCommand command) {
+        commandDaemon.registerCommand(command);
     }
 
     protected void handleNewMessage(MessageReceivedEvent event) {
