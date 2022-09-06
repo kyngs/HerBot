@@ -6,6 +6,7 @@ import co.aikar.commands.JDAOptions;
 import cz.oneblock.core.SystemDaemon;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import xyz.kyngs.herbot.bot.HerBotDaemon;
+import xyz.kyngs.herbot.bot.database.DatabaseDaemon;
 
 public class CommandDaemon extends HerBotDaemon {
     private final JDACommandManager commandManager;
@@ -51,5 +52,9 @@ public class CommandDaemon extends HerBotDaemon {
 
             event.getMessage().replyEmbeds(builder.build()).queue();
         }
+    }
+
+    protected DatabaseDaemon getDatabaseDaemon() {
+        return databaseDaemon;
     }
 }

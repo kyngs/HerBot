@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import xyz.kyngs.herbot.bot.animal.AnimalDaemon;
 import xyz.kyngs.herbot.bot.command.CommandDaemon;
 import xyz.kyngs.herbot.bot.dupe.AntiDuplicationDaemon;
+import xyz.kyngs.herbot.bot.eco.EconomyDaemon;
 import xyz.kyngs.herbot.bot.info.InfoDaemon;
 
 import java.io.File;
@@ -30,6 +31,7 @@ public class HerBot implements BootLoader {
         system.registerDaemon(AntiDuplicationDaemon.class);
         system.registerDaemon(InfoDaemon.class);
         system.registerDaemon(AnimalDaemon.class);
+        system.registerDaemon(EconomyDaemon.class);
 
         system.load();
         system.start();
