@@ -36,3 +36,9 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'xyz.kyngs.herbot.bot.HerBot'
+    }
+}
