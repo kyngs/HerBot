@@ -28,6 +28,8 @@ build/
 .gradle/
 *.iml
 
+test/
+
 
 config.yml
 #
